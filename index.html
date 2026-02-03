@@ -10,10 +10,10 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffe6e6; /* Light pink background */
+            background-color: #ffe6e6;
             font-family: 'Arial', sans-serif;
             margin: 0;
-            overflow: hidden; /* Prevents scrollbars when button moves */
+            overflow: hidden; /* Important: stops scrollbars appearing when button jumps */
         }
 
         .container {
@@ -22,6 +22,8 @@
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
@@ -32,8 +34,6 @@
 
         .buttons {
             margin-top: 20px;
-            position: relative; /* Needed for absolute positioning of No button */
-            height: 60px; /* Gives space for buttons */
         }
 
         button {
@@ -42,7 +42,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease; /* Smooth hover effect */
             margin: 0 10px;
         }
 
@@ -60,10 +60,12 @@
         #noBtn {
             background-color: #e0e0e0;
             color: #333;
-            position: absolute; /* Allows it to move freely */
+            /* Important: Transition makes it slide rather than teleport instantly */
+            transition: top 0.3s ease, left 0.3s ease; 
+            position: relative;
+            z-index: 100; /* Ensures it stays on top */
         }
 
-        /* Message that appears after saying Yes */
         #successMessage {
             display: none;
             color: #ff4d4d;
@@ -85,7 +87,7 @@
         
         <div class="buttons">
             <button id="yesBtn" onclick="sayYes()">Yes</button>
-            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
+            <button id="noBtn" onmouseover="moveButton()">No</button>
         </div>
 
         <div id="successMessage">
@@ -95,20 +97,30 @@
 
     <script>
         function moveButton() {
-            var x = Math.random() * (window.innerWidth - document.getElementById('noBtn').offsetWidth) - 85;
-            var y = Math.random() * (window.innerHeight - document.getElementById('noBtn').offsetHeight) - 48;
+            var btn = document.getElementById('noBtn');
             
-            // Keep the button within the screen
-            if (x < 0) x = 0;
-            if (y < 0) y = 0;
-            if (x > window.innerWidth - 100) x = window.innerWidth - 100;
-            if (y > window.innerHeight - 50) y = window.innerHeight - 50;
+            // Get the current window dimensions
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            
+            // Get the button dimensions
+            var btnWidth = btn.offsetWidth;
+            var btnHeight = btn.offsetHeight;
 
-            document.getElementById('noBtn').style.left = x + 'px';
-            document.getElementById('noBtn').style.top = y + 'px';
-            
-            // Just in case we need to override the initial relative positioning
-            document.getElementById('noBtn').style.position = 'absolute';
+            // Calculate max positions so it stays completely visible
+            // We subtract the button size to ensure the right/bottom edges don't get cut off
+            var maxX = windowWidth - btnWidth;
+            var maxY = windowHeight - btnHeight;
+
+            // Generate random coordinates within these bounds
+            var newX = Math.random() * maxX;
+            var newY = Math.random() * maxY;
+
+            // Apply the new position
+            // We switch to 'fixed' to position it relative to the browser window, not the container
+            btn.style.position = 'fixed'; 
+            btn.style.left = newX + 'px';
+            btn.style.top = newY + 'px';
         }
 
         function sayYes() {
@@ -116,8 +128,6 @@
             document.getElementById('noBtn').style.display = 'none';
             document.querySelector('h1').style.display = 'none';
             document.getElementById('successMessage').style.display = 'block';
-            
-            // Optional: Add confetti or background change here
             document.body.style.backgroundColor = "#ffcccc";
         }
     </script>
