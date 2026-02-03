@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6; /* Light pink background */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars when button moves */
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #ff4d4d;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            position: relative; /* Needed for absolute positioning of No button */
+            height: 60px; /* Gives space for buttons */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        #yesBtn {
+            background-color: #ff4d4d;
+            color: white;
+            box-shadow: 0 4px 6px rgba(255, 77, 77, 0.3);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            background-color: #ff3333;
+        }
+
+        #noBtn {
+            background-color: #e0e0e0;
+            color: #333;
+            position: absolute; /* Allows it to move freely */
+        }
+
+        /* Message that appears after saying Yes */
+        #successMessage {
+            display: none;
+            color: #ff4d4d;
+            font-size: 2rem;
+            margin-top: 20px;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Will you be my Valentine? 💖</h1>
+        
+        <div class="buttons">
+            <button id="yesBtn" onclick="sayYes()">Yes</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
+        </div>
+
+        <div id="successMessage">
+            Yay! See you then! 🥰
+        </div>
+    </div>
+
+    <script>
+        function moveButton() {
+            var x = Math.random() * (window.innerWidth - document.getElementById('noBtn').offsetWidth) - 85;
+            var y = Math.random() * (window.innerHeight - document.getElementById('noBtn').offsetHeight) - 48;
+            
+            // Keep the button within the screen
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x > window.innerWidth - 100) x = window.innerWidth - 100;
+            if (y > window.innerHeight - 50) y = window.innerHeight - 50;
+
+            document.getElementById('noBtn').style.left = x + 'px';
+            document.getElementById('noBtn').style.top = y + 'px';
+            
+            // Just in case we need to override the initial relative positioning
+            document.getElementById('noBtn').style.position = 'absolute';
+        }
+
+        function sayYes() {
+            document.getElementById('yesBtn').style.display = 'none';
+            document.getElementById('noBtn').style.display = 'none';
+            document.querySelector('h1').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Optional: Add confetti or background change here
+            document.body.style.backgroundColor = "#ffcccc";
+        }
+    </script>
+
+</body>
+</html>
